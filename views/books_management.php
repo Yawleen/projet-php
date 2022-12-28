@@ -1,32 +1,6 @@
 <?php $titre = 'Gestion des livres'; ?>
 <?php $css_file = 'books_management.css'; ?>
 
-<?php
-
-$form = "";
-
-if (isset($_POST['continue-button'])) {
-    $form = $_POST['management-options'];
-}
-
-if (isset($_POST['addition-button'])) {
-    // appel au modèle pour faire un ajout dans la table 'books'
-}
-
-if (isset($_POST['modification-button'])) {
-    // appel au modèle pour faire un update dans la table 'books'
-}
-
-if (isset($_POST['deletion-button'])) {
-    // appel au modèle pour faire un delete dans la table 'books'
-}
-
-if (isset($_POST['availability-button'])) {
-    // appel au modèle pour faire un update dans la table 'borrowings'
-}
-
-
-?>
 <?php ob_start(); ?>
 <h2>Gestion des livres</h2>
 <div class="form-container">
@@ -35,42 +9,42 @@ if (isset($_POST['availability-button'])) {
         case "1":
             echo '
             <h4>Ajout d\'un livre</h4>
-            <form class="addition-form" method="post">
+            <form action="index.php?page=management" class="addition-form" method="post">
             <div class="input-container">
             <label for="title">Titre :</label>
-            <input type="text" name="title" id="title">
+            <input type="text" name="title" id="title" required>
         </div>
         <div class="input-container">
         <label for="author">Auteur :</label>
-        <input type="text" name="author" id="author">
+        <input type="text" name="author" id="author" required>
     </div>
         <div class="input-container">
         <label for="genre">Genre :</label>
-        <input type="text" name="genre" id="genre">
+        <input type="text" name="genre" id="genre" required>
     </div>
         <div class="input-container">
         <label for="resume">Résumé :</label>
-        <input type="text" name="resume" id="resume">
+        <textarea name="resume" id="resume" maxlength="255" required></textarea>
     </div>
             <div class="input-container">
             <label for="release-date">Date de parution:</label>
-            <input type="date" id="release-date" name="release-date">
+            <input type="date" id="release-date" name="release-date" required>
         </div>
         <div class="input-container">
         <label for="editor">Éditeur :</label>
-        <input type="text" name="editor" id="editor">
+        <input type="text" name="editor" id="editor"required>
     </div>
             <div class="input-container">
             <label for="pages">Nombre de pages :</label>
-            <input type="text" name="pages" id="pages">
+            <input type="text" name="pages" id="pages" required>
         </div>
             <div class="input-container">
             <label for="isbn">ISBN :</label>
-            <input type="text" name="isbn" id="isbn">
+            <input type="text" name="isbn" id="isbn" required>
         </div>
             <div class="input-container">
             <label for="media">URL de la page de couverture :</label>
-            <input type="text" name="media" id="media">
+            <input type="text" name="media" id="media" required>
         </div>
             
             <button type="submit" name="addition-button">Valider</button>
@@ -79,13 +53,14 @@ if (isset($_POST['availability-button'])) {
         case "2":
             echo '
             <h4>Modification d\'un livre</h4>
-            <form class="modification-form" method="post">
+            <form action="index.php?page=management" class="modification-form" method="post">
             <div class="input-container">
             <label for="book">Livre :</label>
-            <select name="book" id="book">';
-             foreach($books as $book) {
+            <select name="book" id="book">
+            <option value="">-- Sélectionner un livre -- </option>';
+            foreach ($books as $book) {
                 $book_author = Author::getOne($book->id_author);
-                echo "<option value=\"$book->id_book\"> $book->title de ". $book_author->full_name . " </option>";             
+                echo "<option value=\"$book->id_book\"> $book->title de " . $book_author->full_name . " </option>";
             }
             echo '</select>
                 </div>
@@ -103,8 +78,8 @@ if (isset($_POST['availability-button'])) {
         </div>
             <div class="input-container">
             <label for="resume">Résumé :</label>
-            <input type="text" name="resume" id="resume">
-        </div>
+            <textarea name="resume" id="resume" maxlength="255"></textarea>
+            </div>
                 <div class="input-container">
                 <label for="release-date">Date de parution:</label>
                 <input type="date" id="release-date" name="release-date">
@@ -133,16 +108,17 @@ if (isset($_POST['availability-button'])) {
         case "3":
             echo '
             <h4>Suppression d\'un livre</h4>
-            <form class="deletion-form" method="post">
+            <form action="index.php?page=management" class="deletion-form" method="post">
             <div class="input-container">
             <label for="book">Livre :</label>
-            <select name="book" id="book">';
-             foreach($books as $book) {
+            <select name="book" id="book">
+            <option value="">-- Sélectionner un livre -- </option>';
+            foreach ($books as $book) {
                 $book_author = Author::getOne($book->id_author);
-                echo "<option value=\"$book->id_book\"> $book->title de ". $book_author->full_name . " </option>";
-             }
+                echo "<option value=\"$book->id_book\"> $book->title de " . $book_author->full_name . " </option>";
+            }
 
-             echo '</select>
+            echo '</select>
              </div>
              <button type="submit" name="deletion-button">Valider</button>
              </form>';
@@ -150,24 +126,26 @@ if (isset($_POST['availability-button'])) {
         case "4":
             echo '
             <h4>Remise d\'un livre</h4>
-            <form class="availability-form" method="post">
+            <form action="index.php?page=management" class="availability-form" method="post">
             <div class="input-container">
             <label for="book">Livre :</label>
-            <select name="book" id="book">';
-             foreach($books as $book) {
+            <select name="book" id="book">
+            <option value="">-- Sélectionner un livre -- </option>';
+            foreach ($books as $book) {
                 $book_author = Author::getOne($book->id_author);
-                echo "<option value=\"$book->id_book\"> $book->title de ". $book_author->full_name . " </option>";
-             }
+                echo "<option value=\"$book->id_book\"> $book->title de " . $book_author->full_name . " </option>";
+            }
 
-             echo '</select>
+            echo '</select>
              </div>
              <button type="submit" name="availability-button">Valider</button>
              </form>';
             break;
 
         default:
-            echo '<form class="management-form" method="post">
+            echo '<form action="index.php?page=management" class="management-form" method="post">
     <select name="management-options">
+        <option value="">-- Sélectionner une action -- </option>
         <option value="1">Ajouter un livre</option>
         <option value="2">Modifier un livre</option>
         <option value="3">Supprimer un livre</option>

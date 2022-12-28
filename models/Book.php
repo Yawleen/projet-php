@@ -16,7 +16,7 @@ class Book extends Table
         $objects = [];
 
         $query = "select * from books where LOWER(title) LIKE \"%$bookTitle%\"";
-
+        
         $lines = my_fetch_array($query);
 
         if (count($lines) > 0) {

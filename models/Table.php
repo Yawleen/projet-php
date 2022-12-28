@@ -59,10 +59,13 @@ class Table
 
 
 		if (isset($this->{$this->primary_key_field_name})) {
+
 			$query .= 'UPDATE ' . $this->table_name . ' SET ';
 
+			$fields = array_slice(array_keys((array) $this), 3);
 			$first = true;
-			foreach ($this->fields_names as $field) {
+
+			foreach ($fields as $field) {
 				if ($first)
 					$first = false;
 				else
@@ -70,21 +73,24 @@ class Table
 				$query .= $field . ' = \'' . $this->{$field} . '\'';
 			}
 			$query .= ' WHERE ' . $this->primary_key_field_name . ' = ' . $this->{$this->primary_key_field_name};
-			echo $query . '<br>';
-			$res = my_query($query);
+			// echo $query;
+			my_query($query);
 		} else {
 			$query .= "INSERT INTO $this->table_name (";
+
 			$first = true;
-			foreach ($this->fields_names as $field) {
+			$fields = array_slice($this->fields_names, 1);
+
+			foreach ($fields as $field) {
 				if ($first)
 					$first = false;
 				else
 					$query .= ', ';
 				$query .= $field;
 			}
-			$query .= ") VALUES (";
+			$query .= ') VALUES (';
 			$first = true;
-			foreach ($this->fields_names as $field) {
+			foreach ($fields as $field) {
 				if ($first)
 					$first = false;
 				else
@@ -92,11 +98,10 @@ class Table
 				$query .= '\'' . $this->{$field} . '\'';
 			}
 
-			$query .= ")";
-
-			echo $query . '<br>';
-			$res = my_query($query);
+			$query .= ')';
+			my_query($query);
 			$pk_val = my_insert_id();
+			// echo $query;
 			$this->{$this->primary_key_field_name} = $pk_val;
 		}
 	}

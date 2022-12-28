@@ -2,8 +2,8 @@
 <?php $css_file = 'books.css'; ?>
 
 <?php ob_start(); ?>
-<h1>Tous nos livres 📖</h1>
 <?php if(isset($noResultMessage)) echo "<div class='no-result'>$noResultMessage</div>"; ?>
+<?php if (!isset($filteredBooks)) echo '<h1>Tous nos livres 📖</h1>' ?>
 <div class="books-gallery">
     <?php foreach ($books as $book) : ?>
         <?php

@@ -10,6 +10,7 @@ require_once('models/Author.php');
 require_once('models/Editor.php');
 require_once('models/User.php');
 require_once('models/Role.php');
+require_once('models/Borrowing.php');
 
 
 // routing
@@ -65,8 +66,125 @@ if ($page == 'home') {
 } elseif ($page == 'management') {
     $books = Book::getAll();
 
+    $form = "";
+
+    if (isset($_POST['continue-button'])) {
+        $form = $_POST['management-options'];
+    }
+
+    if (isset($_POST['addition-button'])) {
+        $newBook = new Book();
+
+        if (!empty($_POST['title'])) {
+            $newBook->title = ltrim(str_replace("'", "\'", $_POST['title']));
+        }
+
+        if (!empty($_POST['author'])) {
+            $author = Author::searchAuthor(strtolower(ltrim(utf8_decode($_POST['author']))));
+
+            if (isset($author->id_author)) {
+                $newBook->id_author = $author->id_author;
+            } else {
+                $newAuthor = new Author();
+                $newAuthor->full_name = ltrim(str_replace("'", "\'", $_POST['author']));
+                $newAuthor->save();
+                $newBook->id_author = $newAuthor->{$newAuthor->primary_key_field_name};
+            }
+        }
+
+        if (!empty($_POST['genre'])) {
+            $genre = Genre::searchGenre(strtolower(ltrim($_POST['genre'])));
+
+            if (isset($genre->id_genre)) {
+                $newBook->id_genre = $genre->id_genre;
+            } else {
+                $newGenre = new Genre();
+                $newGenre->name = ltrim(str_replace("'", "\'", $_POST['genre']));
+                $newGenre->save();
+                $newBook->id_genre = $newGenre->{$newGenre->primary_key_field_name};
+            }
+        }
+
+        if (!empty($_POST['resume'])) {
+            $newBook->resume = ltrim(str_replace("'", "\'", $_POST['resume']));
+        }
+
+        if (!empty($_POST['release-date'])) {
+            $newBook->release_date = $_POST['release-date'];
+        }
+
+        if (!empty($_POST['editor'])) {
+            $editor = Editor::searchEditor(strtolower(ltrim($_POST['editor'])));
+
+            if (isset($editor->id_editor)) {
+                $newBook->id_editor = $editor->id_editor;
+            } else {
+                $newEditor = new Editor();
+                $newEditor->name = ltrim(str_replace("'", "\'", $_POST['editor']));
+                $newEditor->save();
+                $newBook->id_editor = $newEditor->{$newEditor->primary_key_field_name};
+            }
+        }
+
+        if (!empty($_POST['pages'])) {
+            $newBook->pages = ltrim($_POST['pages']);
+        }
+
+        if (!empty($_POST['isbn'])) {
+            $newBook->isbn = ltrim($_POST['isbn']);
+        }
+
+        if (!empty($_POST['media'])) {
+            $newBook->media = ltrim($_POST['media']);
+        }
+
+        if (isset($newBook->title) && isset($newBook->id_author) && isset($newBook->id_genre) && isset($newBook->resume) && isset($newBook->release_date) && isset($newBook->id_editor) && isset($newBook->pages) && isset($newBook->isbn) && isset($newBook->media)) {
+            $newBook->save();
+            $newBorrowingBook = new Borrowing();
+            $newBorrowingBook->id_book = $newBook->{$newBook->primary_key_field_name};
+            $newBorrowingBook->id_user = 0;
+            $newBorrowingBook->availability = 1;
+            $newBorrowingBook->save();
+        }
+    }
+
+    if (isset($_POST['modification-button'])) {
+        // appel au modèle pour faire un update dans la table 'books'
+    }
+
+    if (isset($_POST['deletion-button'])) {
+        // appel au modèle pour faire un delete dans la table 'books'
+    }
+
+    if (isset($_POST['availability-button'])) {
+        // appel au modèle pour faire un update dans la table 'borrowings'
+    }
+
     include('views/books_management.php');
 } elseif ($page == 'login') {
+
+    if (isset($_SESSION['id_user'])) {
+        header('Location: index.php');
+    }
+
+    if (isset($_POST['login-button'])) {
+        $user = new User();
+        $user->authentication($_POST['email'], $_POST['password']);
+
+        if (isset($user->id_user)) {
+            $_SESSION['id_user'] = $user->id_user;
+            $_SESSION['id_role'] = $user->id_role;
+            $_SESSION['first_name'] = $user->first_name;
+            if (isset($_SESSION['error'])) {
+                unset($_SESSION['error']);
+            }
+
+            header("location: index.php");
+        } else {
+            $_SESSION['error'] = true;
+        }
+    }
+
     include('views/login.php');
 } else {
     include('views/error.php');
