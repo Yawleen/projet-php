@@ -149,7 +149,77 @@ if ($page == 'home') {
     }
 
     if (isset($_POST['modification-button'])) {
-        // appel au modèle pour faire un update dans la table 'books'
+        if (isset($_POST['book']) && !empty($_POST['book'])) {
+            var_dump($_POST['book']);
+            $newBook = new Book();
+            $newBook->{$newBook->primary_key_field_name} = $_POST['book'];
+
+            if (!empty($_POST['title'])) {
+                $newBook->title = ltrim($_POST['title']);
+            }
+
+            if (!empty($_POST['author'])) {
+                $author = Author::searchAuthor(strtolower(ltrim($_POST['author'])));
+
+                if (isset($author->id_author)) {
+                    $newBook->id_author = $author->id_author;
+                } else {
+                    $newAuthor = new Author();
+                    $newAuthor->full_name = ltrim($_POST['author']);
+                    $newAuthor->save();
+                    $newBook->id_author = $newAuthor->{$newAuthor->primary_key_field_name};
+                }
+            }
+
+            if (!empty($_POST['genre'])) {
+                $genre = Genre::searchGenre(strtolower(ltrim($_POST['genre'])));
+
+                if (isset($genre->id_genre)) {
+                    $newBook->id_genre = $genre->id_genre;
+                } else {
+                    $newGenre = new Genre();
+                    $newGenre->name = ltrim($_POST['author']);
+                    $newGenre->save();
+                    $newBook->id_genre = $newGenre->{$newGenre->primary_key_field_name};
+                }
+            }
+
+            if (!empty($_POST['resume'])) {
+                $newBook->resume = ltrim(str_replace("'", "\'", $_POST['resume']));
+            }
+
+            if (!empty($_POST['release-date'])) {
+                var_dump($_POST['release-date']);
+                $newBook->release_date = $_POST['release-date'];
+            }
+
+            if (!empty($_POST['editor'])) {
+                $editor = Editor::searchEditor(strtolower(ltrim($_POST['editor'])));
+
+                if (isset($editor->id_editor)) {
+                    $newBook->id_editor = $editor->id_editor;
+                } else {
+                    $newEditor = new Editor();
+                    $newEditor->name = ltrim($_POST['editor']);
+                    $newEditor->save();
+                    $newBook->id_editor = $newEditor->{$newEditor->primary_key_field_name};
+                }
+            }
+
+            if (!empty($_POST['pages'])) {
+                $newBook->pages = ltrim($_POST['pages']);
+            }
+
+            if (!empty($_POST['isbn'])) {
+                $newBook->isbn = ltrim($_POST['isbn']);
+            }
+
+            if (!empty($_POST['media'])) {
+                $newBook->media = ltrim($_POST['media']);
+            }
+
+            $newBook->save();
+        }
     }
 
     if (isset($_POST['deletion-button'])) {
