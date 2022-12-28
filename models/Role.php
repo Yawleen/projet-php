@@ -6,7 +6,7 @@ class Role extends Table
     {
         $table_name = 'roles';
         $primary_key_field_name = 'id_role';
-        $fields_names = ['name'];
+        $fields_names = ['id_role', 'name'];
         parent::__construct($table_name, $primary_key_field_name, $fields_names);
     }
 }
