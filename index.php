@@ -149,7 +149,6 @@ if ($page == 'home') {
 
     if (isset($_POST['modification-button'])) {
         if (isset($_POST['book']) && !empty($_POST['book'])) {
-            var_dump($_POST['book']);
             $newBook = new Book();
             $newBook->{$newBook->primary_key_field_name} = $_POST['book'];
 
@@ -188,7 +187,6 @@ if ($page == 'home') {
             }
 
             if (!empty($_POST['release-date'])) {
-                var_dump($_POST['release-date']);
                 $newBook->release_date = $_POST['release-date'];
             }
 
