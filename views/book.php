@@ -3,7 +3,7 @@
 
 <?php ob_start(); ?>
 <h1><?= $book->title ?></h1>
-<h3><?= '<u>Genre principal :</u> ' . $book_genre->name ?> </h3>
+<h3><?= '<u>Genre principal :</u> ' . $bookGenre->name ?> </h3>
 <div class="book-container">
     <div class="book-illustration">
         <?php if ($book->isbn == 9999999999999) {
@@ -14,7 +14,7 @@
     </div>
     <div class="book-information">
         <div class="book-details">
-            <?= 'Écrit par <strong>' . $book_author->full_name . '</strong>' ?> • <?= 'Publié le <strong>' . $book->release_date . '</strong> et édité par <strong>' . $book_editor->name . '</strong>' ?> <br> <?= $book->pages . ' pages' ?> • <?= 'ISBN : <strong>' . $book->isbn . '</strong>' ?>
+            <?= 'Écrit par <strong>' . $bookAuthor->full_name . '</strong>' ?> • <?= 'Publié le <strong>' . $book->release_date . '</strong> et édité par <strong>' . $bookEditor->name . '</strong>' ?> <br> <?= $book->pages . ' pages' ?> • <?= 'ISBN : <strong>' . $book->isbn . '</strong>' ?>
         </div>
         <p class="book-resume">
             <span>Résumé :</span>

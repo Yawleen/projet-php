@@ -27,6 +27,12 @@ select {
     margin-bottom: 10px;
 }
 
+.indication {
+    font-size: 0.85rem;
+    font-style: italic;
+    margin-bottom: 5px;
+}
+
 textarea {
     display: block;
     width: 100%;

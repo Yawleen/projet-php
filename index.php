@@ -35,12 +35,12 @@ if ($page == 'home') {
     include('views/borrowings.php');
 } else if ($page == 'books') {
     if (isset($_GET['book_id'])) {
-        $book_id = $_GET['book_id'];
-        $book = Book::getOne($book_id);
+        $bookId = $_GET['book_id'];
+        $book = Book::getOne($bookId);
         if (isset($book->title)) {
-            $book_genre = Genre::getOne($book->id_genre);
-            $book_author = Author::getOne($book->id_author);
-            $book_editor = Editor::getOne($book->id_editor);
+            $bookGenre = Genre::getOne($book->id_genre);
+            $bookAuthor = Author::getOne($book->id_author);
+            $bookEditor = Editor::getOne($book->id_editor);
             include('views/book.php');
             return;
         }
@@ -65,6 +65,9 @@ if ($page == 'home') {
     include('views/books.php');
 } elseif ($page == 'management') {
     $books = Book::getAll();
+    $authors = Author::getAll();
+    $genres = Genre::getAll();
+    $editors = Editor::getAll();
 
     $form = "";
 
@@ -80,29 +83,25 @@ if ($page == 'home') {
         }
 
         if (!empty($_POST['author'])) {
-            $author = Author::searchAuthor(strtolower(ltrim(utf8_decode($_POST['author']))));
-
-            if (isset($author->id_author)) {
-                $newBook->id_author = $author->id_author;
+            if (intval($_POST['author']) !== 0) {
+                $newBook->id_author = $_POST['author'];
             } else {
                 $newAuthor = new Author();
                 $newAuthor->full_name = ltrim(str_replace("'", "\'", $_POST['author']));
                 $newAuthor->save();
                 $newBook->id_author = $newAuthor->{$newAuthor->primary_key_field_name};
-            }
+            };
         }
 
         if (!empty($_POST['genre'])) {
-            $genre = Genre::searchGenre(strtolower(ltrim($_POST['genre'])));
-
-            if (isset($genre->id_genre)) {
-                $newBook->id_genre = $genre->id_genre;
+            if (intval($_POST['genre']) !== 0) {
+                $newBook->id_genre = $_POST['genre'];
             } else {
                 $newGenre = new Genre();
                 $newGenre->name = ltrim(str_replace("'", "\'", $_POST['genre']));
                 $newGenre->save();
                 $newBook->id_genre = $newGenre->{$newGenre->primary_key_field_name};
-            }
+            };
         }
 
         if (!empty($_POST['resume'])) {
@@ -114,16 +113,14 @@ if ($page == 'home') {
         }
 
         if (!empty($_POST['editor'])) {
-            $editor = Editor::searchEditor(strtolower(ltrim($_POST['editor'])));
-
-            if (isset($editor->id_editor)) {
-                $newBook->id_editor = $editor->id_editor;
+            if (intval($_POST['editor']) !== 0) {
+                $newBook->id_editor = $_POST['editor'];
             } else {
                 $newEditor = new Editor();
                 $newEditor->name = ltrim(str_replace("'", "\'", $_POST['editor']));
                 $newEditor->save();
                 $newBook->id_editor = $newEditor->{$newEditor->primary_key_field_name};
-            }
+            };
         }
 
         if (!empty($_POST['pages'])) {
@@ -145,6 +142,8 @@ if ($page == 'home') {
             $newBorrowingBook->id_user = 0;
             $newBorrowingBook->availability = 1;
             $newBorrowingBook->save();
+            $bookAuthor = Author::getOne($newBook->id_author);
+            echo "<script>alert('Le livre a bien été ajouté !')</script>";
         }
     }
 
