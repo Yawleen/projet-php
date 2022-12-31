@@ -1,5 +1,5 @@
 <?php $titre = 'Page 404'; ?>
-<?php $css_file = 'erreur.css'; ?>
+<?php $css_file = 'error.css'; ?>
 
 <?php ob_start(); ?>
 <h2>Page introuvable. 😞</h2>
