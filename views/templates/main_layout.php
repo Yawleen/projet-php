@@ -44,6 +44,7 @@
     <footer>
         Réalisé par Yolène CONSTABLE, Coline LEFEBVRE et Réhane MIGAN
     </footer>
+    <?php if (isset($js_file)) echo "<script src=\"./views/js/$js_file\"></script>" ?>
 </body>
 
 </html>
