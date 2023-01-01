@@ -20,6 +20,7 @@ header {
     position: sticky;
     top: 0;
     left: 0;
+    min-height: 90px;
     color: #fff;
     background-color: #222;
     padding: 25px 50px;
