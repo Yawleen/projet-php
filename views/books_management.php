@@ -103,13 +103,35 @@
                 <input type="text" name="title" id="title">
             </div>
             <div class="input-container">
-            <label for="author">Auteur :</label>
-            <input type="text" name="author" id="author">
-        </div>
-            <div class="input-container">
-            <label for="genre">Genre :</label>
-            <input type="text" name="genre" id="genre">
-        </div>
+        <label for="author">Auteur :</label>
+        <select id="author-choices">
+        <option value="0">-- Sélectionner une option --</option>
+        <option value="1">Sélectionner parmi les auteurs existants</option>
+        <option value="2">Saisir un nouvel auteur</option>
+        </select>
+        <div id="author-choice-display"></div>
+        <select name="author" id="author_select">';
+            foreach ($authors as $author) {
+                echo "<option value=\"$author->id_author\"> $author->full_name</option>";
+            }
+            echo '</select>
+        <input type="text" name="author" id="author_text" required>
+    </div>
+    <div class="input-container">
+    <label for="genre">Genre :</label>
+    <select id="genre-choices">
+    <option value="0">-- Sélectionner une option --</option>
+    <option value="1">Sélectionner parmi les genres existants</option>
+    <option value="2">Saisir un nouveau genre</option>
+    </select>
+    <div id="genre-choice-display"></div>
+    <select name="genre" id="genre_select">';
+        foreach ($genres as $genre) {
+            echo "<option value=\"$genre->id_genre\"> $genre->name</option>";
+        }
+        echo '</select>
+    <input type="text" name="genre" id="genre_text" required>
+</div>
             <div class="input-container">
             <label for="resume">Résumé :</label>
             <textarea name="resume" id="resume" maxlength="255"></textarea>
@@ -119,9 +141,20 @@
                 <input type="date" id="release-date" name="release-date">
             </div>
             <div class="input-container">
-            <label for="editor">Éditeur :</label>
-            <input type="text" name="editor" id="editor">
-        </div>
+        <label for="editor">Éditeur :</label>
+        <select id="editor-choices">
+        <option value="0">-- Sélectionner une option --</option>
+        <option value="1">Sélectionner parmi les éditeurs existants</option>
+        <option value="2">Saisir un nouvel éditeur</option>
+        </select>
+        <div id="editor-choice-display"></div>
+        <select name="editor" id="editor_select">';
+            foreach ($editors as $editor) {
+                echo "<option value=\"$editor->id_editor\"> $editor->name</option>";
+            }
+            echo '</select>
+        <input type="text" name="editor" id="editor_text" required>
+    </div>
                 <div class="input-container">
                 <label for="pages">Nombre de pages :</label>
                 <input type="number" name="pages" id="pages">
