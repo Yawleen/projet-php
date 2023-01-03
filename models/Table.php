@@ -106,6 +106,17 @@ class Table
 		}
 	}
 
+	public function delete()
+	{
+		$query = '';
+
+		if (isset($this->{$this->primary_key_field_name})) {
+
+			$query .= 'DELETE from ' . $this->table_name . ' WHERE ' . $this->primary_key_field_name . ' = ' . $this->{$this->primary_key_field_name};
+			my_query($query);
+		}
+	}
+
 	public static function getAll()
 	{
 

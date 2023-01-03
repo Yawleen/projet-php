@@ -242,6 +242,16 @@ if ($page == 'home') {
 
     if (isset($_POST['deletion-button'])) {
         // appel au modèle pour faire un delete dans la table 'books'
+        if (isset($_POST['book']) && !empty($_POST['book'])) {
+            echo $_POST['book'];
+            $deletedBooks = Book::getOne($_POST['book']);
+            $deletedBorrowing = Borrowing::get_one_by_bookid($_POST['book']);
+            if (isset($deletedBooks) && isset($deletedBorrowing)) {
+                $deletedBooks->delete();
+                $deletedBorrowing->delete();
+                echo "<script>alert('Le livre a bien été supprimé !')</script>";
+            }
+        }
     }
 
     if (isset($_POST['availability-button'])) {
