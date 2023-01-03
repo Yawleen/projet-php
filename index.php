@@ -31,25 +31,52 @@ if ($page == 'home') {
 
     include('views/home.php');
 } else if ($page == 'borrowings') {
+    $borrow = Borrowing::getOne($_SESSION['id_user']);
+    $books = Book::getAll();
+
+    
+    if (isset($_POST['render-button'])) {
+       
+        
+        $borrow->renderBook($_SESSION['id_user'],  $borrow->id_book);
+        
+        /* header("location: index.php"); */
+    }
 
     include('views/borrowings.php');
+    
 } else if ($page == 'books') {
+   
     if (isset($_GET['book_id'])) {
         $book_id = $_GET['book_id'];
         $book = Book::getOne($book_id);
+        $borrow = Borrowing::getOne($book_id);
+        $book_user = ($_SESSION['id_user']);
+     
         if (isset($book->title)) {
             $book_genre = Genre::getOne($book->id_genre);
             $book_author = Author::getOne($book->id_author);
             $book_editor = Editor::getOne($book->id_editor);
+
+            if (isset($_POST['borrowing-button'])) {
+                $borrow->borrowBook($_SESSION['id_user'], $_GET['book_id']) ;
+                header("location: index.php");
+            }
+            if (isset($_POST['render-button'])) {
+                $borrow->renderBook($_SESSION['id_user'],  $_GET['book_id']);
+                header("location: index.php");
+            }
             include('views/book.php');
             return;
         }
+       
 
         include('views/error.php');
         return;
     }
 
     $books = Book::getAll();
+
 
     if (isset($_POST['search-button'])) {
         if (!empty($_POST['search-bar-input'])) {

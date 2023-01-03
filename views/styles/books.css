@@ -69,7 +69,15 @@ h3 {
 .book-resume {
     text-align: justify;
 }
-
+.availability  {
+    border-color: #222;
+}
+.availability p {
+    color : green;
+}
+.unavailability p {
+    color :red;
+}
 button {
     padding: 5px 10px;
     background-color: #222;

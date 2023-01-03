@@ -1,9 +1,13 @@
 <?php $titre = $book->title; ?>
 <?php $css_file = 'book.css'; ?>
 
+
 <?php ob_start(); ?>
 <h1><?= $book->title ?></h1>
 <h3><?= '<u>Genre principal :</u> ' . $book_genre->name ?> </h3>
+<?php   $borrow = Borrowing::getOne($book->id_book);
+        $user = User::getOne($borrow->id_user);
+?>
 <div class="book-container">
     <div class="book-illustration">
         <?php if ($book->isbn == 9999999999999) {
@@ -20,16 +24,35 @@
             <span>Résumé :</span>
             <?= strtoupper($book->resume[0]) . substr(strtolower($book->resume), 1) ?>
         </p>
-        <?php if(isset($_SESSION['id_role']) && $_SESSION['id_role'] == 2) echo '<form method="post"><button type="submit" name="borrowing-button">Emprunter</button></form>' ?>
-        <!-- si le livre a déjà été emprunté, ne pas afficher le bouton 'emprunter' et faire apparaître un message indiquant que le livre est indisponible -->
-        <!-- si l'utilisateur est un admin, afficher ici qui a emprunté le livre -->
+        <?php if(isset($_SESSION['id_role']) && $_SESSION['id_role'] == 2) {
+         
+                if($borrow->availability == 1){
+                    echo '<form method="post"><button type="submit" name="borrowing-button">Emprunter</button></form>';
+                }
+                else if($borrow->availability == 2 && $_SESSION['id_user'] == $borrow->id_user ) {
+                    echo '<form method="post"><button type="submit" name="render-button">Rendre</button></form>';
+                }
+                else{
+                   
+                    echo 'Le livre a été emprunté';
+                }
+            }
+            else
+            if($borrow->availability == 1){
+                echo '<form method="post"><button type="submit" name="borrowing-button">Emprunter</button></form>';
+            }
+            else if($borrow->availability == 2 && $_SESSION['id_user'] == $borrow->id_user ) {
+                echo '<form method="post"><button type="submit" name="render-button">Rendre</button></form>';
+            }
+            else{
+                echo 'Le livre a été emprunté par '.$user->first_name.' '. $user->last_name;
+            }
+
+          ?>
     </div>
 </div>
 <?php $contenu = ob_get_clean(); ?>
 
-<?php 
-    if (isset($_POST['borrowing-button'])) {
-      // appel au modèle pour faire un update dans la table 'borrowings'
-    }
-?>
+
+
 <?php require './views/templates/main_layout.php'; ?>
