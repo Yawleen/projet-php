@@ -31,17 +31,8 @@ if ($page == 'home') {
 
     include('views/home.php');
 } else if ($page == 'borrowings') {
-    $borrow = Borrowing::getOne($_SESSION['id_user']);
+  
     $books = Book::getAll();
-
-    
-    if (isset($_POST['render-button'])) {
-       
-        
-        $borrow->renderBook($_SESSION['id_user'],  $borrow->id_book);
-        
-        /* header("location: index.php"); */
-    }
 
     include('views/borrowings.php');
     
@@ -60,17 +51,18 @@ if ($page == 'home') {
 
             if (isset($_POST['borrowing-button'])) {
                 $borrow->borrowBook($_SESSION['id_user'], $_GET['book_id']) ;
-                header("location: index.php");
+                echo "<script> alert('Le livre a bien été emprunté')</script>";
+                
             }
             if (isset($_POST['render-button'])) {
                 $borrow->renderBook($_SESSION['id_user'],  $_GET['book_id']);
-                header("location: index.php");
+                echo "<script> alert('Votre livre a bien été remis')</script>";
+
             }
             include('views/book.php');
             return;
         }
        
-
         include('views/error.php');
         return;
     }

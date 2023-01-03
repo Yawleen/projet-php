@@ -29,7 +29,7 @@
                 if($borrow->availability == 1){
                     echo '<form method="post"><button type="submit" name="borrowing-button">Emprunter</button></form>';
                 }
-                else if($borrow->availability == 2 && $_SESSION['id_user'] == $borrow->id_user ) {
+                else if($borrow->availability == 0 && $_SESSION['id_user'] == $borrow->id_user ) {
                     echo '<form method="post"><button type="submit" name="render-button">Rendre</button></form>';
                 }
                 else{
@@ -37,17 +37,11 @@
                     echo 'Le livre a été emprunté';
                 }
             }
-            else
-            if($borrow->availability == 1){
-                echo '<form method="post"><button type="submit" name="borrowing-button">Emprunter</button></form>';
-            }
-            else if($borrow->availability == 2 && $_SESSION['id_user'] == $borrow->id_user ) {
-                echo '<form method="post"><button type="submit" name="render-button">Rendre</button></form>';
-            }
             else{
-                echo 'Le livre a été emprunté par '.$user->first_name.' '. $user->last_name;
+                if($borrow->availability == 0){
+                    echo 'Le livre a été emprunté par '.$user->first_name.' '. $user->last_name;
+                }
             }
-
           ?>
     </div>
 </div>

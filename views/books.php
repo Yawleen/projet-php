@@ -29,17 +29,10 @@
                 </div>
             </div>
             <?php if ($borrow->availability == 1) echo '<div class="availability">  <p> Disponible ✅ </p> </div>' ?>
-            <?php if ($borrow->availability == 2) echo '<div class="unavailability"> <p > Indisponible 😞</p> </div>' ?>
+            <?php if ($borrow->availability == 0) echo '<div class="unavailability"> <p > Indisponible 😞</p> </div>' ?>
         </div>
     <?php endforeach; ?>
 </div>
-
-
-
-
-
-
-
 
 <?php $contenu = ob_get_clean(); ?>
 
