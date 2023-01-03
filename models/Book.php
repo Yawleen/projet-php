@@ -16,7 +16,7 @@ class Book extends Table
         $objects = [];
 
         $query = "select * from books where LOWER(title) LIKE \"%$bookTitle%\"";
-        
+
         $lines = my_fetch_array($query);
 
         if (count($lines) > 0) {
@@ -32,5 +32,23 @@ class Book extends Table
         }
     }
 
-   
+    public static function get_borrowed_books()
+    {
+
+        $class_name = static::class;
+        $instance_base = new $class_name;
+        $objects = [];
+
+        $query = 'select * from ' . $instance_base->table_name . ' INNER JOIN borrowings ON books.id_book = borrowings.id_book WHERE availability = 0';
+        $lines = my_fetch_array($query);
+        foreach ($lines as $line) {
+            $instance = new $class_name;
+            foreach ($instance->fields_names as $field)
+                $instance->$field = $line[$field];
+
+            $objects[] = $instance;
+        }
+
+        return $objects;
+    }
 }

@@ -91,6 +91,7 @@ if ($page == 'home') {
     }
 
     $books = Book::getAll();
+    $borrowed_books = Book::get_borrowed_books();
     $authors = Author::getAll();
     $genres = Genre::getAll();
     $editors = Editor::getAll();
@@ -245,6 +246,12 @@ if ($page == 'home') {
 
     if (isset($_POST['availability-button'])) {
         // appel au modèle pour faire un update dans la table 'borrowings'
+        if (isset($_POST['book']) && !empty($_POST['book'])) {
+            $borrowing = Borrowing::get_one_by_bookid( $_POST['book']);
+            $borrowing->availability = 1;
+            $borrowing->id_user = 0;
+            $borrowing->save();
+        }
     }
 
     include('views/books_management.php');
