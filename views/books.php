@@ -9,7 +9,9 @@
         <?php
         $book_author = Author::getOne($book->id_author);
         $book_genre = Genre::getOne($book->id_genre);
+        $borrow = Borrowing::getOne($book->id_book);
         ?>
+        
         <div class="book-container">
             <div class="book-illustration">
                 <a href=<?= "index.php?page=books&book_id=$book->id_book" ?>>
@@ -26,9 +28,12 @@
                     <?= 'Auteur : ' .  $book_author->full_name ?> • <?= 'Genre : ' . $book_genre->name ?>
                 </div>
             </div>
+            <?php if ($borrow->availability == 1) echo '<div class="availability">  <p> Disponible ✅ </p> </div>' ?>
+            <?php if ($borrow->availability == 0) echo '<div class="unavailability"> <p > Indisponible 😞</p> </div>' ?>
         </div>
     <?php endforeach; ?>
 </div>
+
 <?php $contenu = ob_get_clean(); ?>
 
 <?php require './views/templates/main_layout.php'; ?>

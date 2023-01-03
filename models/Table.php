@@ -119,7 +119,7 @@ class Table
 			$instance = new $class_name;
 			foreach ($instance->fields_names as $field)
 				$instance->$field = $line[$field];
-
+				
 			$objects[] = $instance;
 		}
 
