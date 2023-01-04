@@ -73,7 +73,6 @@ class Table
 				$query .= $field . ' = \'' . $this->{$field} . '\'';
 			}
 			$query .= ' WHERE ' . $this->primary_key_field_name . ' = ' . $this->{$this->primary_key_field_name};
-			// echo $query;
 			my_query($query);
 		} else {
 			$query .= "INSERT INTO $this->table_name (";
@@ -101,7 +100,6 @@ class Table
 			$query .= ')';
 			my_query($query);
 			$pk_val = my_insert_id();
-			// echo $query;
 			$this->{$this->primary_key_field_name} = $pk_val;
 		}
 	}

@@ -126,10 +126,10 @@
     </select>
     <div id="genre-choice-display"></div>
     <select name="genre" id="genre_select">';
-        foreach ($genres as $genre) {
-            echo "<option value=\"$genre->id_genre\"> $genre->name</option>";
-        }
-        echo '</select>
+            foreach ($genres as $genre) {
+                echo "<option value=\"$genre->id_genre\"> $genre->name</option>";
+            }
+            echo '</select>
     <input type="text" name="genre" id="genre_text" required>
 </div>
             <div class="input-container">

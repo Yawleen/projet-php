@@ -34,38 +34,40 @@ if ($page == 'home') {
     if ($_SESSION['id_role'] == 1) {
         header('Location: index.php');
     }
-  
+
     $books = Book::getAll();
 
     include('views/borrowings.php');
-    
 } else if ($page == 'books') {
-   
+
     if (isset($_GET['book_id'])) {
         $bookId = $_GET['book_id'];
         $book = Book::getOne($bookId);
-        $borrow = Borrowing::getOne($bookId);
-        $book_user = ($_SESSION['id_user']);
-     
+
         if (isset($book->title)) {
             $bookGenre = Genre::getOne($book->id_genre);
             $bookAuthor = Author::getOne($book->id_author);
             $bookEditor = Editor::getOne($book->id_editor);
+            $borrow = Borrowing::get_one_by_bookid($bookId);
+            $user = User::getOne($borrow->id_user);
 
             if (isset($_POST['borrowing-button'])) {
-                $borrow->borrowBook($_SESSION['id_user'], $bookId) ;
+                $borrow->id_user = $_SESSION['id_user'];
+                $borrow->availability = 0;
+                $borrow->save();
                 echo "<script> alert('Le livre a bien été emprunté !')</script>";
-                
             }
             if (isset($_POST['render-button'])) {
-                $borrow->renderBook($_SESSION['id_user'], $bookId);
-                echo "<script> alert('Votre livre a bien été remis !')</script>";
-
+                $borrow->id_user = 0;
+                $borrow->availability = 1;
+                $borrow->save();
+                echo "<script> alert('Le livre a bien été remis !')</script>";
             }
+
             include('views/book.php');
             return;
         }
-       
+
         include('views/error.php');
         return;
     }
@@ -169,8 +171,9 @@ if ($page == 'home') {
             $newBorrowingBook->id_user = 0;
             $newBorrowingBook->availability = 1;
             $newBorrowingBook->save();
-            $bookAuthor = Author::getOne($newBook->id_author);
             echo "<script>alert('Le livre a bien été ajouté !')</script>";
+        } else {
+            echo "<script>alert('Veuillez remplir tous les champs.')</script>";
         }
     }
 
@@ -237,29 +240,33 @@ if ($page == 'home') {
             }
 
             $newBook->save();
+            echo "<script>alert('Le livre a bien été modifié !')</script>";
         }
     }
 
     if (isset($_POST['deletion-button'])) {
-        // appel au modèle pour faire un delete dans la table 'books'
         if (isset($_POST['book']) && !empty($_POST['book'])) {
-            echo $_POST['book'];
-            $deletedBooks = Book::getOne($_POST['book']);
-            $deletedBorrowing = Borrowing::get_one_by_bookid($_POST['book']);
-            if (isset($deletedBooks) && isset($deletedBorrowing)) {
-                $deletedBooks->delete();
-                $deletedBorrowing->delete();
+            $bookToDelete = Book::getOne($_POST['book']);
+            $borrowingToDelete = Borrowing::get_one_by_bookid($_POST['book']);
+            if (isset($bookToDelete) && isset($borrowingToDelete)) {
+                $bookToDelete->delete();
+                $borrowingToDelete->delete();
                 echo "<script>alert('Le livre a bien été supprimé !')</script>";
             }
+        } else {
+            echo "<script>alert('Veuillez sélectionner un livre à supprimer.')</script>";
         }
     }
 
     if (isset($_POST['availability-button'])) {
         if (isset($_POST['book']) && !empty($_POST['book'])) {
-            $borrowing = Borrowing::get_one_by_bookid( $_POST['book']);
-            $borrowing->availability = 1;
+            $borrowing = Borrowing::get_one_by_bookid($_POST['book']);
             $borrowing->id_user = 0;
+            $borrowing->availability = 1;
             $borrowing->save();
+            echo "<script> alert('Le livre a bien été remis !')</script>";
+        } else {
+            echo "<script>alert('Veuillez sélectionner un livre à remettre.')</script>";
         }
     }
 

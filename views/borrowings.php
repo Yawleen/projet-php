@@ -1,22 +1,19 @@
-
-
 <?php $titre = 'Tous nos livres'; ?>
 <?php $css_file = 'books.css'; ?>
 
 <?php ob_start(); ?>
-<?php if(isset($noResultMessage)) echo "<div class='no-result'>$noResultMessage</div>"; ?>
-<?php if (!isset($filteredBooks)) echo '<h1>Vos emprunts en cours 📖</h1>' ?>
+<h1>Vos emprunts en cours 📖</h1>
 <div class="books-gallery">
-
-<?php echo $borrow->id_user;?>
+<?php $noBooks = true; ?>
     <?php foreach ($books as $book) : ?>
         <?php
          
-        $borrow = Borrowing::getOne($book->id_book);
+        $borrow = Borrowing::get_one_by_bookid($book->id_book);
         $book_genre = Genre::getOne($book->id_genre);
         $book_author = Author::getOne($book->id_author);
         ?>
          <?php if ($borrow->id_user == ($_SESSION['id_user']) && $borrow->availability == 0){
+            $noBooks = false;
              $var = ' <div class="book-container">
              <div class="book-illustration">
                  <a href= "index.php?page=books&book_id='.$book->id_book.' " >'; 
@@ -40,6 +37,7 @@
          ?>
 
     <?php endforeach; ?>
+    <?php if($noBooks === true) echo "<div class='no-result'>Vous n'avez aucun emprunt pour le moment.</div>";?>
 </div>
 <?php $contenu = ob_get_clean(); ?>
 

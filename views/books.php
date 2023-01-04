@@ -2,7 +2,7 @@
 <?php $css_file = 'books.css'; ?>
 
 <?php ob_start(); ?>
-<?php if(isset($noResultMessage)) echo "<div class='no-result'>$noResultMessage</div>"; ?>
+<?php if (isset($noResultMessage)) echo "<div class='no-result'>$noResultMessage</div>"; ?>
 <?php if (!isset($filteredBooks)) echo '<h1>Tous nos livres 📖</h1>' ?>
 <div class="books-gallery">
     <?php foreach ($books as $book) : ?>
@@ -11,7 +11,7 @@
         $bookGenre = Genre::getOne($book->id_genre);
         $borrow = Borrowing::get_one_by_bookid($book->id_book);
         ?>
-        
+
         <div class="book-container">
             <div class="book-illustration">
                 <a href=<?= "index.php?page=books&book_id=$book->id_book" ?>>

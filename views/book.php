@@ -5,10 +5,7 @@
 <?php ob_start(); ?>
 <h1><?= $book->title ?></h1>
 <h3><?= '<u>Genre principal :</u> ' . $bookGenre->name ?> </h3>
-<?php
-$borrow = Borrowing::get_one_by_bookid($book->id_book);
-$user = User::getOne($borrow->id_user);
-?>
+
 <div class="book-container">
     <div class="book-illustration">
         <?php if ($book->isbn == 9999999999999) {
@@ -31,11 +28,11 @@ $user = User::getOne($borrow->id_user);
             } else if ($borrow->availability == 0 && $_SESSION['id_user'] == $borrow->id_user) {
                 echo '<form method="post"><button type="submit" name="render-button">Rendre</button></form>';
             } else {
-                echo 'Le livre a été emprunté';
+                echo '<b>Le livre a été emprunté</b>';
             }
         } else {
             if ($borrow->availability == 0) {
-                echo 'Le livre a été emprunté par ' . $user->first_name . ' ' . $user->last_name;
+                echo "<b>Le livre a été emprunté par  $user->first_name  $user->last_name</b>";
             }
         }
         ?>
