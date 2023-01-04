@@ -4,9 +4,10 @@
 
 <?php ob_start(); ?>
 <h1><?= $book->title ?></h1>
-<h3><?= '<u>Genre principal :</u> ' . $book_genre->name ?> </h3>
-<?php   $borrow = Borrowing::getOne($book->id_book);
-        $user = User::getOne($borrow->id_user);
+<h3><?= '<u>Genre principal :</u> ' . $bookGenre->name ?> </h3>
+<?php
+$borrow = Borrowing::get_one_by_bookid($book->id_book);
+$user = User::getOne($borrow->id_user);
 ?>
 <div class="book-container">
     <div class="book-illustration">
@@ -24,25 +25,20 @@
             <span>Résumé :</span>
             <?= strtoupper($book->resume[0]) . substr(strtolower($book->resume), 1) ?>
         </p>
-        <?php if(isset($_SESSION['id_role']) && $_SESSION['id_role'] == 2) {
-         
-                if($borrow->availability == 1){
-                    echo '<form method="post"><button type="submit" name="borrowing-button">Emprunter</button></form>';
-                }
-                else if($borrow->availability == 0 && $_SESSION['id_user'] == $borrow->id_user ) {
-                    echo '<form method="post"><button type="submit" name="render-button">Rendre</button></form>';
-                }
-                else{
-                   
-                    echo 'Le livre a été emprunté';
-                }
+        <?php if (isset($_SESSION['id_role']) && $_SESSION['id_role'] == 2) {
+            if ($borrow->availability == 1) {
+                echo '<form method="post"><button type="submit" name="borrowing-button">Emprunter</button></form>';
+            } else if ($borrow->availability == 0 && $_SESSION['id_user'] == $borrow->id_user) {
+                echo '<form method="post"><button type="submit" name="render-button">Rendre</button></form>';
+            } else {
+                echo 'Le livre a été emprunté';
             }
-            else{
-                if($borrow->availability == 0){
-                    echo 'Le livre a été emprunté par '.$user->first_name.' '. $user->last_name;
-                }
+        } else {
+            if ($borrow->availability == 0) {
+                echo 'Le livre a été emprunté par ' . $user->first_name . ' ' . $user->last_name;
             }
-          ?>
+        }
+        ?>
     </div>
 </div>
 <?php $contenu = ob_get_clean(); ?>

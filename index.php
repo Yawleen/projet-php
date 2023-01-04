@@ -48,18 +48,18 @@ if ($page == 'home') {
         $book_user = ($_SESSION['id_user']);
      
         if (isset($book->title)) {
-            $book_genre = Genre::getOne($book->id_genre);
-            $book_author = Author::getOne($book->id_author);
-            $book_editor = Editor::getOne($book->id_editor);
+            $bookGenre = Genre::getOne($book->id_genre);
+            $bookAuthor = Author::getOne($book->id_author);
+            $bookEditor = Editor::getOne($book->id_editor);
 
             if (isset($_POST['borrowing-button'])) {
                 $borrow->borrowBook($_SESSION['id_user'], $bookId) ;
-                echo "<script> alert('Le livre a bien été emprunté')</script>";
+                echo "<script> alert('Le livre a bien été emprunté !')</script>";
                 
             }
             if (isset($_POST['render-button'])) {
                 $borrow->renderBook($_SESSION['id_user'], $bookId);
-                echo "<script> alert('Votre livre a bien été remis')</script>";
+                echo "<script> alert('Votre livre a bien été remis !')</script>";
 
             }
             include('views/book.php');
@@ -255,7 +255,6 @@ if ($page == 'home') {
     }
 
     if (isset($_POST['availability-button'])) {
-        // appel au modèle pour faire un update dans la table 'borrowings'
         if (isset($_POST['book']) && !empty($_POST['book'])) {
             $borrowing = Borrowing::get_one_by_bookid( $_POST['book']);
             $borrowing->availability = 1;

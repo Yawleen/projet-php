@@ -7,9 +7,9 @@
 <div class="books-gallery">
     <?php foreach ($books as $book) : ?>
         <?php
-        $book_author = Author::getOne($book->id_author);
-        $book_genre = Genre::getOne($book->id_genre);
-        $borrow = Borrowing::getOne($book->id_book);
+        $bookAuthor = Author::getOne($book->id_author);
+        $bookGenre = Genre::getOne($book->id_genre);
+        $borrow = Borrowing::get_one_by_bookid($book->id_book);
         ?>
         
         <div class="book-container">
@@ -25,11 +25,14 @@
             <div class="book-information">
                 <h3 id="book-title"><?= $book->title ?></h3>
                 <div class="book-details">
-                    <?= 'Auteur : ' .  $book_author->full_name ?> • <?= 'Genre : ' . $book_genre->name ?>
+                    <?= 'Auteur : ' .  $bookAuthor->full_name ?> • <?= 'Genre : ' . $bookGenre->name ?>
                 </div>
             </div>
-            <?php if ($borrow->availability == 1) echo '<div class="availability">  <p> Disponible ✅ </p> </div>' ?>
-            <?php if ($borrow->availability == 0) echo '<div class="unavailability"> <p > Indisponible 😞</p> </div>' ?>
+            <?php if ($borrow->availability == 1) {
+                echo '<div class="availability">  <p> Disponible ✅ </p> </div>';
+            } else {
+                echo '<div class="unavailability"> <p > Indisponible 😞</p> </div>';
+            } ?>
         </div>
     <?php endforeach; ?>
 </div>
