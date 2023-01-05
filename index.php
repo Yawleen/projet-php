@@ -87,7 +87,80 @@ if ($page == 'home') {
     }
 
     include('views/books.php');
-} elseif ($page == 'management') {
+} else if ($page == 'user_management') {
+    if ($_SESSION['id_role'] == 2) {
+        header('Location: index.php');
+    }
+    $form = "";
+    $users = User::getAll();
+
+    if (isset($_POST['continue-button'])) {
+        $form = $_POST['management-user-options'];
+    }
+
+    if (isset($_POST['addition-button'])) {
+        $newUser = new User();
+
+        if (!empty($_POST['last_name'])) {
+            $newUser->last_name = ltrim(str_replace("'", "\'", $_POST['last_name']));
+        }
+        if (!empty($_POST['first_name'])) {
+            $newUser->first_name = ltrim(str_replace("'", "\'", $_POST['first_name']));
+        }
+        if (!empty($_POST['birthdate'])) {
+            $newUser->birthdate = $_POST['birthdate'];
+        }
+    
+        if (!empty($_POST['email'])) {
+            $newUser->email = ltrim(str_replace("'", "\'", $_POST['email']));
+        }
+
+        if (!empty($_POST['address'])) {
+            $newUser->address = ltrim($_POST['address']);
+        }
+
+        if (!empty($_POST['zip_code'])) {
+            $newUser->zip_code = ltrim($_POST['zip_code']);
+            
+        }
+        if (!empty($_POST['city'])) {
+            $newUser->city = ltrim($_POST['city']);
+        }
+
+        if (!empty($_POST['country'])) {
+            $newUser->country = ltrim($_POST['country']);
+        }
+
+        if (!empty($_POST['password'])) {
+            $newUser->password = ltrim($_POST['password']);
+            echo "<script>alert('saluuut')</script>";
+        }
+
+        if (!empty($_POST['role'])) {
+            $newUser->id_role = $_POST['role']; 
+        }
+
+        if (isset($newUser->last_name) && isset($newUser->first_name) && isset($newUser->birthdate) && isset($newUser->email) && isset($newUser->address) && isset($newUser->zip_code) && isset($newUser->city) && isset($newUser->country) && isset($newUser->password) && isset($newUser->id_role)) {
+            $newUser->save();
+            echo "<script> alert('L'utilisateur a bien été ajouté')</script>";
+        } else {
+            echo "<script>alert('Veuillez remplir tous les champs.')</script>";
+        }
+    }
+    
+    if (isset($_POST['deletion-button'])) {
+        if (isset($_POST['user']) && !empty($_POST['user'])) {
+            $deletedUsers = User::getOne($_POST['user']);
+            if (isset($deletedUsers)) {
+                $deletedUsers->delete();
+                echo "<script> alert('L'utilisateur a bien été supprimé')</script>";
+            }
+        }
+    }
+
+    include('views/user_management.php');
+
+}elseif ($page == 'management') {
     if ($_SESSION['id_role'] == 2) {
         header('Location: index.php');
     }

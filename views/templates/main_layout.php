@@ -31,6 +31,7 @@
                 <?php if (isset($_SESSION['id_user'])) echo '<li class="menu__item"><a href="index.php?page=books">Tous nos livres</a></li>' ?>
                 <?php if (isset($_SESSION['id_role']) && $_SESSION['id_role'] == 1) {
                     echo '<li class="menu__item"><a href="index.php?page=management">Gestion des livres</a></li>';
+                    echo '<li class="menu__item"><a href="index.php?page=user_management">Gestion des utilisateurs</a></li>';
                 } else if (isset($_SESSION['id_role']) && $_SESSION['id_role'] == 2) {
                     echo '<li class="menu__item"><a href="index.php?page=borrowings">Vos emprunts</a></li>';
                 } ?>
