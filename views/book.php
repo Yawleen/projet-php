@@ -76,8 +76,8 @@
             foreach ($comments as $comment) {
                 if ($comment->id_book == $book->id_book) {
                     $nocomments = false;
-                    $user = User::getOne($comment->id_user);
-                    echo "<p>" . $user->first_name . " " . $user->last_name . " : </p></br>";
+                    $userId = $comment->id_user;
+                    echo "<p> $usersTab[$userId] : </p></br>";
                     echo "<p>" . $comment->contents . "</p></br>" ;
                     if ($_SESSION['id_user'] == $comment->id_user || $_SESSION['id_role'] == 1) {
                         echo '<form method="post"><button type="submit" name="delete-comments" value=' . $comment->id_comment . '>Supprimer le commentaire</button></form></br>';

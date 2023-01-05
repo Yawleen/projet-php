@@ -37,6 +37,24 @@ if ($page == 'home') {
     }
 
     $books = Book::getAll();
+    $authors = Author::getAll();
+    $genres = Genre::getAll();
+    $borrowings = Borrowing::getAll();
+    $authorsTab = [];
+    $genresTab = [];
+    $borrowTab = [];
+
+    foreach ($authors as $author) {
+        $authorsTab[$author->id_author] = $author->full_name;
+    }
+
+    foreach ($genres as $genre) {
+        $genresTab[$genre->id_genre] = $genre->name;
+    }
+
+    foreach ($borrowings as $borrowing) {
+        $borrowTab[$borrowing->id_book] = [$borrowing->availability, $borrowing->id_user];
+    }
 
     include('views/borrowings.php');
 } else if ($page == 'books') {
@@ -44,6 +62,12 @@ if ($page == 'home') {
     if (isset($_GET['book_id'])) {
         $bookId = $_GET['book_id'];
         $book = Book::getOne($bookId);
+        $users = User::getAll();
+        $usersTab = [];
+
+        foreach ($users as $user) {
+            $usersTab[$user->id_user] = $user->first_name . " " . $user->last_name;
+        }
 
         if (isset($book->title)) {
             $bookGenre = Genre::getOne($book->id_genre);
@@ -100,6 +124,24 @@ if ($page == 'home') {
     }
 
     $books = Book::getAll();
+    $authors = Author::getAll();
+    $genres = Genre::getAll();
+    $borrowings = Borrowing::getAll();
+    $authorsTab = [];
+    $genresTab = [];
+    $borrowTab = [];
+
+    foreach ($authors as $author) {
+        $authorsTab[$author->id_author] = $author->full_name;
+    }
+
+    foreach ($genres as $genre) {
+        $genresTab[$genre->id_genre] = $genre->name;
+    }
+
+    foreach ($borrowings as $borrowing) {
+        $borrowTab[$borrowing->id_book] = $borrowing->availability;
+    }
 
 
     if (isset($_POST['search-button'])) {
@@ -182,6 +224,14 @@ if ($page == 'home') {
         if (isset($_POST['user']) && !empty($_POST['user'])) {
             $deletedUsers = User::getOne($_POST['user']);
             if (isset($deletedUsers)) {
+                $borrowToDelete = Borrowing::get_borrowings_by_userid($_POST['user']);
+
+                foreach($borrowToDelete as $borrow) {
+                    $borrow->user_id = 0;
+                    $borrow->availability = 1;
+                    $borrow->save();
+                }
+
                 $deletedUsers->delete();
                 $_SESSION['deletion_success'] = true;
                 header('Location: index.php?page=user_management');
@@ -206,6 +256,11 @@ if ($page == 'home') {
     $authors = Author::getAll();
     $genres = Genre::getAll();
     $editors = Editor::getAll();
+    $authorsTab = [];
+
+    foreach ($authors as $author) {
+        $authorsTab[$author->id_author] = $author->full_name;
+    }
 
     $form = "";
 

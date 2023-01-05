@@ -210,8 +210,8 @@
             <select name="book" id="book">
             <option value="">-- Sélectionner un livre -- </option>';
             foreach ($books as $book) {
-                $book_author = Author::getOne($book->id_author);
-                echo "<option value=\"$book->id_book\"> $book->title de " . $book_author->full_name . " </option>";
+                $authorId = $book->id_author;
+                echo "<option value=\"$book->id_book\"> $book->title de " . $authorsTab[$authorId] . " </option>";
             }
 
             echo '</select>
@@ -228,8 +228,8 @@
             <select name="book" id="book">
             <option value="">-- Sélectionner un livre -- </option>';
             foreach ($borrowed_books as $book) {
-                $book_author = Author::getOne($book->id_author);
-                echo "<option value=\"$book->id_book\"> $book->title de " . $book_author->full_name . " </option>";
+                $authorId = $book->id_author;
+                echo "<option value=\"$book->id_book\"> $book->title de " . $authorsTab[$authorId] . " </option>";
             }
 
             echo '</select>

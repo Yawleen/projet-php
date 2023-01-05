@@ -18,4 +18,22 @@ class Borrowing extends Table
 
         return $borrowing;
     }
+    public static function get_borrowings_by_userid($id_user)
+    {
+        $class_name = static::class;
+        $objects = [];
+
+        $query = 'select id_borrowing from borrowings where id_user =' . $id_user;
+
+        $lines = my_fetch_array($query);
+        foreach ($lines as $line) {
+            $instance = new $class_name;
+            foreach ($instance->fields_names as $field)
+                $instance->$field = $line[$field];
+
+            $objects[] = $instance;
+        }
+
+        return $objects;
+    }
 }
