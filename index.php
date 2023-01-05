@@ -11,6 +11,7 @@ require_once('models/Editor.php');
 require_once('models/User.php');
 require_once('models/Role.php');
 require_once('models/Borrowing.php');
+require_once('models/Comment.php');
 
 
 // routing
@@ -64,6 +65,21 @@ if ($page == 'home') {
                 echo "<script> alert('Le livre a bien été remis !')</script>";
             }
 
+            if (isset($_POST['comment-button'])) {
+                if (!empty($_POST['content'])) {
+                        $newComments = new Comment();
+                        $newComments->id_book = $bookId;
+                        $newComments->id_user = $_SESSION['id_user'];
+                        $newComments->contents = $_POST['content'];
+                        $newComments->save();
+                }
+            }
+            if (isset($_POST['delete-comments'])) {
+                echo $_POST['delete-comments'];
+                $deletedComments = Comment::getOne($_POST['delete-comments']);
+                $deletedComments->delete();
+                echo "<script>alert('Le commentaire a bien été supprimé !')</script>";
+            }
             include('views/book.php');
             return;
         }
