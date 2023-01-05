@@ -6,7 +6,7 @@ function my_query($query)
 	mysqli_report(MYSQLI_REPORT_OFF);
 
 	if (empty($link))
-		$link = @mysqli_connect('localhost', 'root', '', 'library');
+		$link = @mysqli_connect('localhost', 'root', 'root', 'library');
 
 	if (!$link)
 		die("Failed to connect to MySQL: " . mysqli_connect_error());

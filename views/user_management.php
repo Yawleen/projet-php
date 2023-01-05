@@ -1,8 +1,24 @@
 <?php $titre = 'Gestion des utilisateurs'; ?>
 <?php $css_file = 'books_management.css'; ?>
-<?php $js_file = 'script.js'; ?>
 
 <?php ob_start(); ?>
+<?php if (isset($_SESSION['addition_success']) && $_SESSION['addition_success'] === true) {
+    echo '<div class="success message">L\'utilisateur a bien été ajouté !</div>';
+    unset($_SESSION['addition_success']);
+} ?>
+<?php if (isset($_SESSION['addition_success']) && $_SESSION['addition_success'] === false) {
+    echo '<div class="error message">Veuillez remplir tous les champs.</div>';
+    unset($_SESSION['addition_success']);
+} ?>
+<?php if (isset($_SESSION['deletion_success']) && $_SESSION['deletion_success'] === true) {
+    echo '<div class="success message">L\'utilisateur a bien été supprimé.</div>';
+    unset($_SESSION['deletion_success']); 
+} ?>
+<?php if (isset($_SESSION['deletion_success']) && $_SESSION['deletion_success'] === false) {
+    echo '<div class="error message">Veuillez sélectionner une option.</div>';
+    unset($_SESSION['deletion_success']); 
+} ?>
+
 <h2>Gestion des utilisateurs</h2>
 <div class="form-container">
     <?php
@@ -74,7 +90,7 @@
              <button type="submit" name="deletion-button">Valider</button>
              </form>';
             break;
-       
+
         default:
             echo '<form action="index.php?page=user_management" class="management-form" method="post">
                     <select name="management-user-options">
@@ -84,7 +100,7 @@
                     </select>
                     <button type="submit" name="continue-button">Continuer</button>
                 </form>';
-            }
+    }
     ?>
 </div>
 

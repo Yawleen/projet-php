@@ -3,6 +3,35 @@
 <?php $js_file = 'script.js'; ?>
 
 <?php ob_start(); ?>
+<?php if (isset($_SESSION['adding_book_success']) && $_SESSION['adding_book_success'] === true) {
+    echo '<div class="success message">Le livre a bien été ajouté !</div>';
+    unset($_SESSION['adding_book_success']);
+} ?>
+<?php if (isset($_SESSION['adding_book_success']) && $_SESSION['adding_book_success'] === false) {
+    echo '<div class="error message">Veuillez remplir tous les champs.</div>';
+    unset($_SESSION['adding_book_success']);
+} ?>
+<?php if (isset($_SESSION['modification_book_success'])) {
+    echo '<div class="success message">Le livre a bien été modifié !</div>';
+    unset($_SESSION['modification_book_success']);
+} ?>
+<?php if (isset($_SESSION['deletion_success']) && $_SESSION['deletion_success'] === true) {
+    echo '<div class="success message">Le livre a bien été supprimé !</div>';
+    unset($_SESSION['deletion_success']);
+} ?>
+<?php if (isset($_SESSION['deletion_success']) && $_SESSION['deletion_success'] === false) {
+    echo '<div class="error message">Veuillez remplir tous les champs.</div>';
+    unset($_SESSION['deletion_success']);
+} ?>
+<?php if (isset($_SESSION['availability_success']) && $_SESSION['availability_success'] === true) {
+    echo '<div class="success message">Le livre a bien été remis.</div>';
+    unset($_SESSION['availability_success']);
+} ?>
+<?php if (isset($_SESSION['availability_success']) && $_SESSION['availability_success'] === false) {
+    echo '<div class="error message">Veuillez remplir tous les champs.</div>';
+    unset($_SESSION['availability_success']);
+} ?>
+
 <h2>Gestion des livres</h2>
 <div class="form-container">
     <?php

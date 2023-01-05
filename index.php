@@ -51,35 +51,46 @@ if ($page == 'home') {
             $bookEditor = Editor::getOne($book->id_editor);
             $borrow = Borrowing::get_one_by_bookid($bookId);
             $user = User::getOne($borrow->id_user);
+            $comments = Comment::getAll();
 
             if (isset($_POST['borrowing-button'])) {
                 $borrow->id_user = $_SESSION['id_user'];
                 $borrow->availability = 0;
                 $borrow->save();
-                echo "<script> alert('Le livre a bien été emprunté !')</script>";
+                $_SESSION['borrow_success'] = true;
+                header('Location: index.php?page=books&book_id=' . $bookId);
+                exit();
             }
             if (isset($_POST['render-button'])) {
                 $borrow->id_user = 0;
                 $borrow->availability = 1;
                 $borrow->save();
-                echo "<script> alert('Le livre a bien été remis !')</script>";
+                $_SESSION['render_success'] = true;
+                header('Location: index.php?page=books&book_id=' . $bookId);
+                exit();
             }
 
             if (isset($_POST['comment-button'])) {
                 if (!empty($_POST['content'])) {
-                        $newComments = new Comment();
-                        $newComments->id_book = $bookId;
-                        $newComments->id_user = $_SESSION['id_user'];
-                        $newComments->contents = $_POST['content'];
-                        $newComments->save();
+                    $newComments = new Comment();
+                    $newComments->id_book = $bookId;
+                    $newComments->id_user = $_SESSION['id_user'];
+                    $newComments->contents = $_POST['content'];
+                    $newComments->save();
+                    $_SESSION['comment_success'] = true;
+                    header('Location: index.php?page=books&book_id=' . $bookId);
+                    exit();
                 }
             }
+
             if (isset($_POST['delete-comments'])) {
-                echo $_POST['delete-comments'];
                 $deletedComments = Comment::getOne($_POST['delete-comments']);
                 $deletedComments->delete();
-                echo "<script>alert('Le commentaire a bien été supprimé !')</script>";
+                $_SESSION['delete_success'] = true;
+                header('Location: index.php?page=books&book_id=' . $bookId);
+                exit();
             }
+
             include('views/book.php');
             return;
         }
@@ -126,7 +137,7 @@ if ($page == 'home') {
         if (!empty($_POST['birthdate'])) {
             $newUser->birthdate = $_POST['birthdate'];
         }
-    
+
         if (!empty($_POST['email'])) {
             $newUser->email = ltrim(str_replace("'", "\'", $_POST['email']));
         }
@@ -137,7 +148,7 @@ if ($page == 'home') {
 
         if (!empty($_POST['zip_code'])) {
             $newUser->zip_code = ltrim($_POST['zip_code']);
-            
+
         }
         if (!empty($_POST['city'])) {
             $newUser->city = ltrim($_POST['city']);
@@ -149,34 +160,43 @@ if ($page == 'home') {
 
         if (!empty($_POST['password'])) {
             $newUser->password = ltrim($_POST['password']);
-            echo "<script>alert('saluuut')</script>";
         }
 
         if (!empty($_POST['role'])) {
-            $newUser->id_role = $_POST['role']; 
+            $newUser->id_role = $_POST['role'];
         }
 
         if (isset($newUser->last_name) && isset($newUser->first_name) && isset($newUser->birthdate) && isset($newUser->email) && isset($newUser->address) && isset($newUser->zip_code) && isset($newUser->city) && isset($newUser->country) && isset($newUser->password) && isset($newUser->id_role)) {
             $newUser->save();
-            echo "<script> alert('L'utilisateur a bien été ajouté')</script>";
+            $_SESSION['addition_success'] = true;
+            header('Location: index.php?page=user_management');
+            exit();
         } else {
-            echo "<script>alert('Veuillez remplir tous les champs.')</script>";
+            $_SESSION['addition_success'] = false;
+            header('Location: index.php?page=user_management');
+            exit();
         }
     }
-    
+
     if (isset($_POST['deletion-button'])) {
         if (isset($_POST['user']) && !empty($_POST['user'])) {
             $deletedUsers = User::getOne($_POST['user']);
             if (isset($deletedUsers)) {
                 $deletedUsers->delete();
-                echo "<script> alert('L'utilisateur a bien été supprimé')</script>";
+                $_SESSION['deletion_success'] = true;
+                header('Location: index.php?page=user_management');
+                exit();
             }
+        } else {
+            $_SESSION['deletion_success'] = false;
+            header('Location: index.php?page=user_management');
+            exit();
         }
     }
 
     include('views/user_management.php');
 
-}elseif ($page == 'management') {
+} elseif ($page == 'management') {
     if ($_SESSION['id_role'] == 2) {
         header('Location: index.php');
     }
@@ -208,7 +228,8 @@ if ($page == 'home') {
                 $newAuthor->full_name = ltrim(str_replace("'", "\'", $_POST['author']));
                 $newAuthor->save();
                 $newBook->id_author = $newAuthor->{$newAuthor->primary_key_field_name};
-            };
+            }
+            ;
         }
 
         if (!empty($_POST['genre'])) {
@@ -219,7 +240,8 @@ if ($page == 'home') {
                 $newGenre->name = ltrim(str_replace("'", "\'", $_POST['genre']));
                 $newGenre->save();
                 $newBook->id_genre = $newGenre->{$newGenre->primary_key_field_name};
-            };
+            }
+            ;
         }
 
         if (!empty($_POST['resume'])) {
@@ -238,7 +260,8 @@ if ($page == 'home') {
                 $newEditor->name = ltrim(str_replace("'", "\'", $_POST['editor']));
                 $newEditor->save();
                 $newBook->id_editor = $newEditor->{$newEditor->primary_key_field_name};
-            };
+            }
+            ;
         }
 
         if (!empty($_POST['pages'])) {
@@ -260,9 +283,13 @@ if ($page == 'home') {
             $newBorrowingBook->id_user = 0;
             $newBorrowingBook->availability = 1;
             $newBorrowingBook->save();
-            echo "<script>alert('Le livre a bien été ajouté !')</script>";
+            $_SESSION['adding_book_success'] = true;
+            header('Location: index.php?page=management');
+            exit();
         } else {
-            echo "<script>alert('Veuillez remplir tous les champs.')</script>";
+            $_SESSION['adding_book_success'] = false;
+            header('Location: index.php?page=management');
+            exit();
         }
     }
 
@@ -283,7 +310,8 @@ if ($page == 'home') {
                     $newAuthor->full_name = ltrim(str_replace("'", "\'", $_POST['author']));
                     $newAuthor->save();
                     $newBook->id_author = $newAuthor->{$newAuthor->primary_key_field_name};
-                };
+                }
+                ;
             }
 
             if (!empty($_POST['genre'])) {
@@ -294,7 +322,8 @@ if ($page == 'home') {
                     $newGenre->name = ltrim(str_replace("'", "\'", $_POST['genre']));
                     $newGenre->save();
                     $newBook->id_genre = $newGenre->{$newGenre->primary_key_field_name};
-                };
+                }
+                ;
             }
 
             if (!empty($_POST['resume'])) {
@@ -313,7 +342,8 @@ if ($page == 'home') {
                     $newEditor->name = ltrim(str_replace("'", "\'", $_POST['editor']));
                     $newEditor->save();
                     $newBook->id_editor = $newEditor->{$newEditor->primary_key_field_name};
-                };
+                }
+                ;
             }
 
             if (!empty($_POST['pages'])) {
@@ -329,7 +359,9 @@ if ($page == 'home') {
             }
 
             $newBook->save();
-            echo "<script>alert('Le livre a bien été modifié !')</script>";
+            $_SESSION['modification_book_success'] = true;
+            header('Location: index.php?page=management');
+            exit();
         }
     }
 
@@ -340,10 +372,14 @@ if ($page == 'home') {
             if (isset($bookToDelete) && isset($borrowingToDelete)) {
                 $bookToDelete->delete();
                 $borrowingToDelete->delete();
-                echo "<script>alert('Le livre a bien été supprimé !')</script>";
+                $_SESSION['deletion_success'] = true;
+                header('Location: index.php?page=management');
+                exit();
             }
         } else {
-            echo "<script>alert('Veuillez sélectionner un livre à supprimer.')</script>";
+            $_SESSION['deletion_success'] = false;
+            header('Location: index.php?page=management');
+            exit();
         }
     }
 
@@ -353,9 +389,13 @@ if ($page == 'home') {
             $borrowing->id_user = 0;
             $borrowing->availability = 1;
             $borrowing->save();
-            echo "<script> alert('Le livre a bien été remis !')</script>";
+            $_SESSION['availability_success'] = true;
+            header('Location: index.php?page=management');
+            exit();
         } else {
-            echo "<script>alert('Veuillez sélectionner un livre à remettre.')</script>";
+            $_SESSION['availability_success'] = false;
+            header('Location: index.php?page=management');
+            exit();
         }
     }
 

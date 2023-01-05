@@ -1,3 +1,20 @@
+.success {
+    background-color: rgb(132, 180, 59);
+}
+
+.error {
+    background-color: rgb(222, 46, 46);
+}
+
+.message {
+    font-weight: bold;
+    color: #fff;
+    width: 100%;
+    text-align: center;
+    padding: 15px 0;
+    margin-bottom: 30px;
+}
+
 h2 {
     margin-bottom: 50px;
 }
